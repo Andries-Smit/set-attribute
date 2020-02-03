@@ -1,9 +1,9 @@
 {
   "name": "set-attribute",
   "widgetName": "SetAttribute",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "My widget description",
-  "copyright": "Mendix 2019",
+  "copyright": "Mendix 2020",
   "author": "Widget Team",
   "config": {
     "widgetPath": "./dist/MxTestProject/widgets",
