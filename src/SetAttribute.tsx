@@ -4,6 +4,16 @@ import { DynamicValue, ValueStatus } from "mendix";
 
 import { SetAttributeContainerProps } from "../typings/SetAttributeProps";
 
+const PROHIBITED_ATTRIBUTES = ["class", "style", "widgetid", "data-mendix-id"];
+
+const isValid = function isValid(selector: string): boolean {
+    if (PROHIBITED_ATTRIBUTES.indexOf(selector) !== -1) {
+        console.error(`Widget tries to change ${selector} attribute, this is prohibited`);
+        return false;
+    }
+    return true;
+}
+
 const SetAttribute = (props: SetAttributeContainerProps): ReactNode => {
     // console.log("render SetAttribute", props.valueExpression.status, props.valueExpression.value);
     const contentRef: MutableRefObject<HTMLDivElement> = useRef(null);
@@ -21,9 +31,14 @@ const SetAttribute = (props: SetAttributeContainerProps): ReactNode => {
         const containerElement = contentRef.current;
         if (containerElement) {
             // console.log("has current ref");
-            const target = containerElement.querySelector(props.targetSelector);
+            let target = null;
+            try {
+                target = containerElement.querySelector(props.targetSelector);
+            } catch (error) {
+                console.error(`Set Attribute Target sector ${props.targetSelector} is not valid`, error);
+            }
             if (!target) {
-                console.debug(`Target ${props.targetSelector} does not exist or is not visible`);
+                console.debug(`Set Attribute Target ${props.targetSelector} does not exist or is not visible`);
                 return;
             }
             // if (
@@ -56,6 +71,9 @@ const SetAttribute = (props: SetAttributeContainerProps): ReactNode => {
 
     useEffect(() => {
         // console.log("useEffect, initial, no dep");
+        if (!isValid(props.targetSelector)) {
+            return;
+        }
         if (
             (attributeValue.current !== value.current.value &&
                 value.current.status === ValueStatus.Available &&
@@ -73,37 +91,39 @@ const SetAttribute = (props: SetAttributeContainerProps): ReactNode => {
 
     useEffect(() => {
         // console.log("useEffect, with dep");
-        const config: MutationObserverInit = {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            attributeFilter: [props.attribute]
-        };
-        const observer = new MutationObserver(mutationList => {
-            const doUpdate = mutationList.some(
-                mutation =>
-                    !(
-                        mutation.type === "attributes" &&
-                        mutation.attributeName === props.attribute &&
-                        (mutation.target as Element).getAttribute(mutation.attributeName) === attributeValue.current
-                    )
-            );
-            if (doUpdate) {
-                update();
-            }
-            // else {
-            //     console.log("self update");
-            // }
-        });
+       
 
         const contentWrapperNode = contentRef.current;
-        if (contentWrapperNode) {
+        if (contentWrapperNode && isValid(props.targetSelector)) {
+            const config: MutationObserverInit = {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                attributeFilter: [props.attribute]
+            };
+            const observer = new MutationObserver(mutationList => {
+                const doUpdate = mutationList.some(
+                    mutation =>
+                        !(
+                            mutation.type === "attributes" &&
+                            mutation.attributeName === props.attribute &&
+                            (mutation.target as Element).getAttribute(mutation.attributeName) === attributeValue.current
+                        )
+                );
+                if (doUpdate) {
+                    update();
+                }
+                // else {
+                //     console.log("self update");
+                // }
+            });
             observer.observe(contentWrapperNode, config);
             console.log("observe changes");
 
             return () => {
                 // console.log("disconnect");
                 attributeValue.current = null;
+                attributeCondition.current = null;
                 observer.disconnect();
             };
         }
