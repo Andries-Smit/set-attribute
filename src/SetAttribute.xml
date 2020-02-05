@@ -9,16 +9,34 @@
     <properties>
         <propertyGroup caption="General">
             <property key="targetSelector" type="string">
-                <caption>Target Selector</caption>
+                <caption>Target selector</caption>
                 <description/>
             </property>
             <property key="attribute" type="string">
                 <caption>Attribute</caption>
                 <description/>
             </property>
-            <property key="value" type="string">
-                <caption>Value</caption>
+            <property key="valueSource" type="enumeration" defaultValue="text">
+                <caption>Value source</caption>
                 <description/>
+                <enumerationValues>
+                    <enumerationValue key="text">Text</enumerationValue>
+                    <enumerationValue key="expression">Expression</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="valueExpression" type="expression" required="false">
+                <caption>Value E</caption>
+                <description/>
+                <returnType type="String" />
+            </property>
+            <property key="valueText" type="textTemplate" required="false">
+                <caption>Value T</caption>
+                <description/>
+            </property>
+            <property key="attributeCondition" type="expression" defaultValue="true">
+                <caption>Condition</caption>
+                <description/>
+                <returnType type="Boolean" />
             </property>
             <property key="content" type="widgets">
                 <caption>Content</caption>

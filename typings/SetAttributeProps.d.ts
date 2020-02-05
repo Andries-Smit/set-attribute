@@ -4,6 +4,7 @@
  * @author Mendix Widgets Team
  */
 import { CSSProperties } from "react";
+import { DynamicValue } from "mendix";
 import { ReactNode } from "react";
 
 interface CommonProps {
@@ -13,10 +14,15 @@ interface CommonProps {
     tabIndex: number;
 }
 
+export type ValueSourceEnum = "text" | "expression";
+
 export interface SetAttributeContainerProps extends CommonProps {
     targetSelector: string;
     attribute: string;
-    value: string;
+    valueSource: ValueSourceEnum;
+    valueExpression?: DynamicValue<string>;
+    valueText?: DynamicValue<string>;
+    attributeCondition: DynamicValue<boolean>;
     content: ReactNode;
 }
 
@@ -26,13 +32,19 @@ export interface SetAttributePreviewProps {
     styleObject: CSSProperties;
     targetSelector: string;
     attribute: string;
-    value: string;
+    valueSource: ValueSourceEnum;
+    valueExpression?: string;
+    valueText?: string;
+    attributeCondition: boolean;
     content: ReactNode;
 }
 
 export interface VisibilityMap {
     targetSelector: boolean;
     attribute: boolean;
-    value: boolean;
+    valueSource: boolean;
+    valueExpression: boolean;
+    valueText: boolean;
+    attributeCondition: boolean;
     content: boolean;
 }
