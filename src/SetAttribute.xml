@@ -17,7 +17,7 @@
                 <description/>
             </property>
             <property key="valueSource" type="enumeration" defaultValue="text">
-                <caption>Value source</caption>
+                <caption>Source</caption>
                 <description/>
                 <enumerationValues>
                     <enumerationValue key="text">Text</enumerationValue>
@@ -25,12 +25,12 @@
                 </enumerationValues>
             </property>
             <property key="valueExpression" type="expression" required="false">
-                <caption>Value E</caption>
+                <caption>Value expression</caption>
                 <description/>
                 <returnType type="String" />
             </property>
             <property key="valueText" type="textTemplate" required="false">
-                <caption>Value T</caption>
+                <caption>Value text</caption>
                 <description/>
             </property>
             <property key="attributeCondition" type="expression" defaultValue="true">
